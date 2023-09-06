@@ -21274,8 +21274,8 @@
         "type": "other",
         "other": {
           "name": "poetry",
-          "version": "1.0.10",
-          "downloadUrl": "https://files.pythonhosted.org/packages/source/p/poetry/poetry-1.0.10.tar.gz"
+          "version": "1.1.9",
+          "downloadUrl": "https://files.pythonhosted.org/packages/f5/b0/0f95f7dae0093ca13a23f1285b0a74f4b25827dcf026c37f762a061fc581/poetry-1.1.9.tar.gz"
         }
       }
     },
