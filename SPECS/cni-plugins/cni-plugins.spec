@@ -1,7 +1,7 @@
 Summary:        Container Network Interface (CNI) plugins
 Name:           cni-plugins
 Version:        1.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        ASL 2.0
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -39,6 +39,9 @@ make -k check |& tee %{_specdir}/%{name}-check-log || %{nocheck}
 %{_default_cni_plugins_dir}/*
 
 %changelog
+* Tue Oct 17 2023 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 1.3.0-2
+- Bump release to rebuild with go 1.20.10
+
 * Wed Oct 13 2023 Mateusz Gozdek <mgozdek@microsoft.com> - 1.3.0-1
 - Make plugin binaries correctly print version
 - Upgrade to version 1.3.0
