@@ -370,7 +370,7 @@ func QueryRPMProvides(rpmFile string) (provides []string, err error) {
 	const queryProvidesOption = "-qlPp"
 
 	logger.Log.Debugf("Querying RPM provides (%s)", rpmFile)
-	stdout, stderr, err := shell.Execute(rpmProgram, queryProvidesOption, rpmFile)
+	stdout, stderr, err := shell.Execute(rpmProgram, "--nosignature", queryProvidesOption, rpmFile)
 	if err != nil {
 		logger.Log.Warn(stderr)
 		return

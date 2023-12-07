@@ -74,7 +74,7 @@ func ValidateRpmPaths(repoDir string) (err error) {
 		// use rpm cli to check the rpmFile's reported package name
 		// print a warning if the filename does not match the package name
 		var stdout, stderr string
-		stdout, stderr, err = shell.Execute("rpm", "-qp", rpmFile)
+		stdout, stderr, err = shell.Execute("rpm", "--nosignature", "-qp", rpmFile)
 		if err == nil {
 			calculatedRpmName := strings.Split(stdout, "\n")
 			calculatedRpmFilename := fmt.Sprintf("%s.rpm", calculatedRpmName[0])
