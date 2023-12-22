@@ -23,7 +23,7 @@ print_error() {
 help() {
 echo "
 Usage:
-sudo make containerized-rpmbuild [REPO_PATH=/path/to/CBL-Mariner] [MODE=test|build] [VERSION=1.0|2.0] [MOUNTS=/path/in/host:/path/in/container ...] [ENABLE_REPO=y] [BUILD_MOUNT=/path/to/build/chroot/mount]
+sudo make containerized-rpmbuild [REPO_PATH=/path/to/CBL-Mariner] [MODE=test|build] [VERSION=1.0|2.0] [MOUNTS=/path/in/host:/path/in/container ...] [BUILD_MOUNT=/path/to/build/chroot/mount] [EXTRA_PACKAGES=pkg ...] [ENABLE_REPO=y] [KEEP_CONTAINER=y] [IMAGE="image"]
 
 Starts a docker container with the specified version of mariner.
 
@@ -37,7 +37,10 @@ Optional arguments:
                         e.g. MOUNTS=\"/host/dir1:/container/dir1 /host/dir2:/container/dir2\"
     BUILD_MOUNT     path to folder to create mountpoints for container's BUILD and BUILDROOT directories.
                         Mountpoints will be ${BUILD_MOUNT}/container-build and ${BUILD_MOUNT}/container-buildroot. default: $REPO_PATH/build
+    EXTRA_PACKAGES  Space delimited list of packages to tdnf install in the container on startup. e.g. EXTRA_PACKAGES=\"pkg1 pkg2\" default: \"\"
     ENABLE_REPO:    Set to 'y' to use local RPMs to satisfy package dependencies. default: n
+    KEEP_CONTAINER: Set to 'y' to not cleanup container upon exit. default: n
+    IMAGE:          Container image to use. For example, IMAGE=\"mcr.microsoft.com/cbl-mariner/root-containerized-rpmbuild:2.0\". default: tool constructs an image
 
     * User can override Mariner make definitions. Some useful overrides could be
                     SPECS_DIR: build specs from another directory like SPECS-EXTENDED by providing SPECS_DIR=path/to/SPECS-EXTENDED. default: $REPO_PATH/SPECS
@@ -78,6 +81,8 @@ fi
 script_dir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 topdir=/usr/src/mariner
 enable_local_repo=false
+keep_container="--rm"
+container_img=""
 
 while (( "$#")); do
   case "$1" in
@@ -86,11 +91,17 @@ while (( "$#")); do
     -p ) repo_path="$(realpath $2)"; shift 2 ;;
     -mo ) extra_mounts="$2"; shift 2 ;;
     -b ) build_mount_dir="$(realpath $2)"; shift 2;;
+    -ep ) extra_packages="$2"; shift 2;;
     -r ) enable_local_repo=true; shift ;;
+    -k ) keep_container=""; shift ;;
+    -i) container_img="$2"; shift 2 ;;
     -h ) help; exit 1 ;;
     ? ) echo -e "ERROR: INVALID OPTION.\n\n"; help; exit 1 ;;
   esac
 done
+    -i) container_img="$2"; shift 2 ;;
+
+echo "container image is $container_img"
 
 # Assign default values
 [[ -z "${repo_path}" ]] && repo_path=${script_dir} && repo_path=${repo_path%'/toolkit'*}
@@ -200,23 +211,31 @@ sed -i "s~<TOPDIR>~${topdir}~" $tmp_dir/setup_functions.sh
 
 # ============ Build the dockerfile ============
 dockerfile="${script_dir}/resources/mariner.Dockerfile"
-
-if [[ "${mode}" == "build" ]]; then # Configure base image
-    echo "Importing chroot into docker..."
-    chroot_file="$BUILD_DIR/worker/worker_chroot.tar.gz"
-    if [[ ! -f "${chroot_file}" ]]; then build_worker_chroot; fi
-    chroot_hash=$(sha256sum "${chroot_file}" | cut -d' ' -f1)
-    # Check if the chroot file's hash has changed since the last build
-    if [[ ! -f "${tmp_dir}/hash" ]] || [[ "$(cat "${tmp_dir}/hash")" != "${chroot_hash}" ]]; then
-        echo "Chroot file has changed, updating..."
-        echo "${chroot_hash}" > "${tmp_dir}/hash"
-        docker import "${chroot_file}" "mcr.microsoft.com/cbl-mariner/containerized-rpmbuild:${version}"
+if [[ "${container_img}" == "" ]]; then # Configure base image
+    if [[ "${mode}" == "build" ]]; then
+        echo "Importing chroot into docker..."
+        chroot_file="$BUILD_DIR/worker/worker_chroot.tar.gz"
+        if [[ ! -f "${chroot_file}" ]]; then build_worker_chroot; fi
+        chroot_hash=$(sha256sum "${chroot_file}" | cut -d' ' -f1)
+        container_img="mcr.microsoft.com/cbl-mariner/containerized-rpmbuild:${version}"
+        # Check if the chroot file's hash has changed since the last build
+        if [[ ! -f "${tmp_dir}/hash" ]] || [[ "$(cat "${tmp_dir}/hash")" != "${chroot_hash}" ]]; then
+            echo "Chroot file has changed, updating..."
+            echo "${chroot_hash}" > "${tmp_dir}/hash"
+            docker import "${chroot_file}" $container_img
+        else
+            echo "Chroot is up-to-date"
+        fi
+        # Build container_img if it does not exist
+        if [[ ! $(docker image inspect --format="ignore me" $container_img 2> /dev/null) ]]; then
+            echo "Building container image..."
+            docker import "${chroot_file}" $container_img
+        fi
     else
-        echo "Chroot is up-to-date"
+        container_img="mcr.microsoft.com/cbl-mariner/base/core:${version}"
     fi
-    container_img="mcr.microsoft.com/cbl-mariner/containerized-rpmbuild:${version}"
 else
-    container_img="mcr.microsoft.com/cbl-mariner/base/core:${version}"
+    echo "NEHAAAAAAAA we have an image alreadyy $container_img"
 fi
 
 # ================== Launch Container ==================
@@ -230,11 +249,12 @@ docker build -q \
                 --build-arg enable_local_repo="$enable_local_repo" \
                 --build-arg mariner_repo="$repo_path" \
                 --build-arg mode="$mode" \
+                --build-arg extra_packages="$extra_packages" \
                 .
 
 echo "docker_image_tag is ${docker_image_tag}"
 
-bash -c "docker run --rm \
+bash -c "docker run $keep_container\
     ${mount_arg} \
     -it ${docker_image_tag} /bin/bash; \
     if [[ -d $RPMS_DIR/repodata ]]; then { rm -r $RPMS_DIR/repodata; echo 'Clearing repodata' ; }; fi
