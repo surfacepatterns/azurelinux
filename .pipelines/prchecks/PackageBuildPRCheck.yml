@@ -101,12 +101,14 @@ extends:
                   - template: .pipelines/templates/PackageBuild.yml@self
                     parameters:
                       customToolchainArtifactName: $(toolchainArtifactNameBase)_${{ configuration.name }}
+                      extraPackageRepos: "$(Build.SourcesDirectory)/SPECS/mariner-repos/mariner-extended.repo"
                       isCheckBuild: true
                       isQuickRebuildPackages: true
                       outputArtifactsFolder: $(ob_outputDirectory)
                       maxCPU: "${{ configuration.maxCPUs }}"
                       pipArtifactFeeds: "mariner/Mariner-Pypi-Feed"
                       selfRepoName: self
+                      specsFolderPath: SPECS-EXTENDED
                       testSuiteName: "[${{ configuration.name }}] Package test"
                       testRerunList: "$(testListFromToolchain)"
 
