@@ -49,7 +49,7 @@ containerd is designed to be embedded into a larger system, rather than being
 used directly by developers or end-users.
 
 %prep
-%autosetup -p1 -n %{name}-%{verBetaFull}
+%autosetup -p1 -n %{upstream_name}-%{verBetaFull}
 
 %build
 export BUILDTAGS="-mod=vendor"
