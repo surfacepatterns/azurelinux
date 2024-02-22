@@ -50,14 +50,14 @@ used directly by developers or end-users.
 
 %build
 export BUILDTAGS="-mod=vendor"
-make VERSION="%{version}" REVISION="%{commit_hash}" binaries man
+make VERSION="%{version}" binaries man
 
 %check
 export BUILDTAGS="-mod=vendor"
-make VERSION="%{version}" REVISION="%{commit_hash}" test
+make VERSION="%{version}" test
 
 %install
-make VERSION="%{version}" REVISION="%{commit_hash}" DESTDIR="%{buildroot}" PREFIX="/usr" install install-man
+make VERSION="%{version}" DESTDIR="%{buildroot}" PREFIX="/usr" install install-man
 
 mkdir -p %{buildroot}/%{_unitdir}
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/containerd.service
