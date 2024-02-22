@@ -1,10 +1,13 @@
 %global debug_package %{nil}
 %define upstream_name containerd
 %define commit_hash 8165feabfdfe38c65b599c4993d227328c231fca
+%global verBetaPrefix 2.0.0
+%global verBetaSuffix 2
+%global verBetaFull %{verBetaPrefix}-beta.%{verBetaSuffix}
 
 Summary: Industry-standard container runtime
 Name: moby-%{upstream_name}
-Version: 2.0.0-beta.2
+Version: %{verBetaPrefix}~beta.%{verBetaSuffix}
 Release: 1%{?dist}
 License: ASL 2.0
 Group: Tools/Container
@@ -12,7 +15,7 @@ URL: https://www.containerd.io
 Vendor: Microsoft Corporation
 Distribution: Mariner
 
-Source0: https://github.com/containerd/containerd/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0: https://github.com/containerd/containerd/archive/v%{verBetaFull}.tar.gz#/%{name}-%{verBetaFull}.tar.gz
 Source1: containerd.service
 Source2: containerd.toml
 Patch0:  wire_through_CRI_checkpoint_RPC.patch
