@@ -92,7 +92,7 @@ fi
 %dir /opt/containerd/lib
 
 %changelog
-* Wed Feb 21 2024 Nan Liu <liunan@microsoft.com> - 2.0.0-beta.2-1
+* Wed Feb 21 2024 Nan Liu <liunan@microsoft.com> - 2.0.0~beta.2-1
 - Upgrade to 2.0.0-beta.2
 
 * Fri Feb 02 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 1.6.26-3
