@@ -4,8 +4,8 @@
 
 Summary: Industry-standard container runtime
 Name: moby-%{upstream_name}
-Version: 1.6.26
-Release: 3%{?dist}
+Version: 2.0.0-beta.2
+Release: 1%{?dist}
 License: ASL 2.0
 Group: Tools/Container
 URL: https://www.containerd.io
@@ -15,8 +15,7 @@ Distribution: Mariner
 Source0: https://github.com/containerd/containerd/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: containerd.service
 Source2: containerd.toml
-Patch0:  Makefile.patch
-Patch1:  add_ptrace_readby_tracedby_to_apparmor.patch
+Patch0:  wire_through_CRI_checkpoint_RPC.patch
 
 %{?systemd_requires}
 
@@ -90,6 +89,9 @@ fi
 %dir /opt/containerd/lib
 
 %changelog
+* Wed Feb 21 2024 Nan Liu <liunan@microsoft.com> - 2.0.0-beta.2-1
+- Upgrade to 2.0.0-beta.2
+
 * Fri Feb 02 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 1.6.26-3
 - Bump release to rebuild with go 1.21.6
 
