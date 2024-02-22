@@ -53,14 +53,14 @@ used directly by developers or end-users.
 
 %build
 export BUILDTAGS="-mod=vendor"
-make VERSION="%{version}" binaries man
+make VERSION="%{verBetaFull}" binaries man
 
 %check
 export BUILDTAGS="-mod=vendor"
-make VERSION="%{version}" test
+make VERSION="%{verBetaFull}" test
 
 %install
-make VERSION="%{version}" DESTDIR="%{buildroot}" PREFIX="/usr" install install-man
+make VERSION="%{verBetaFull}" DESTDIR="%{buildroot}" PREFIX="/usr" install install-man
 
 mkdir -p %{buildroot}/%{_unitdir}
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/containerd.service
