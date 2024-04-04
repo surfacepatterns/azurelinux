@@ -12,8 +12,8 @@ import (
 
 var (
 	// get relevant configs
-//	toolkit_dir,_ = configutils.GetConfig("toolkit_root")
-	scripts_dir,_ = configutils.GetConfig("SCRIPTS_DIR")
+//	toolkit_dir,_ = configutils.GetBuildConfig("toolkit_root")
+	scripts_dir,_ = configutils.GetBuildConfig("SCRIPTS_DIR")
 
 )
 

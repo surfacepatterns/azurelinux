@@ -12,11 +12,11 @@ import (
 
 )
 
-var config map[string]string
+var configMap map[string]string
 const configFile = "configutils/config.txt"
 
 func PopulateConfigFromFile() (err error) {
-	config = make(map[string]string)
+	configMap = make(map[string]string)
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get working directory:\n%w", err)
@@ -24,7 +24,7 @@ func PopulateConfigFromFile() (err error) {
 	base_dir := strings.Split(wd, "toolkit")[0]
 	fmt.Println("[debug] base is ", base_dir)
 	fmt.Println("[debug] wd is ", wd)
-	SetConfig("PROJECT_ROOT", base_dir)
+	SetConfigMap("PROJECT_ROOT", base_dir)
 
 	lines, err := file.ReadLines(wd+"/"+configFile)
 	fmt.Println("[debug] opened file: ", len(lines))
@@ -39,21 +39,21 @@ func PopulateConfigFromFile() (err error) {
 			continue
 		}
 		entry[1] = strings.Replace(entry[1], "<PROJECT_ROOT>/", base_dir, -1)
-		SetConfig(entry[0], entry[1])
+		SetConfigMap(entry[0], entry[1])
 		fmt.Println("[debug] entry is is", entry[0], ":",entry[1] )
-		i,_ := GetConfig(entry[0])
+		i,_ := GetConfigMap(entry[0])
 		fmt.Println("[debug] returnied ",i)
 	}
 	return
 }
 
-func SetConfig(key, val string) {
-	config[key] = val
+func SetConfigMap(key, val string) {
+	configMap[key] = val
 	return
 }
 
-func GetConfig(key string) (val string, err error) {
-	val, exists := config[key]
+func GetConfigMap(key string) (val string, err error) {
+	val, exists := configMap[key]
 	if !exists {
 		err = fmt.Errorf("key does not exist")
 	}

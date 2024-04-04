@@ -19,10 +19,12 @@ var (
 )
 
 func BuildPackage(spec string) (err error) {
-	// build global config map
-	configutils.PopulateConfigFromFile()
-	toolkit_dir, _ = configutils.GetConfig("toolkit_root")
-	project_dir, _ = configutils.GetConfig("PROJECT_ROOT")
+	// build global configs
+	configutils.SetupConfig()
+	toolkit_dir, _ = configutils.GetBuildConfig("toolkit_root")
+	fmt.Println("[debug] toolkit is ", toolkit_dir)
+	project_dir, _ = configutils.GetBuildConfig("PROJECT_ROOT")
+	fmt.Println("[debug] project_dir is ", project_dir)
 
 	fmt.Println("[debug] Building packages: specs are (%s)", spec)
 
