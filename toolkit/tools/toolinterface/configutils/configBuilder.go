@@ -13,24 +13,24 @@ import (
 
 )
 
-const configJson = "configutils/config.json"
-var buildConfig = config.New("build-config")
+const dirConfigFile = "configutils/directory_configs.json"
+var dirConfig = config.New("dir-config")
 
 func SetupConfig() (err error) {
-	buildConfig.WithOptions(config.ParseEnv)
-	buildConfig.AddDriver(json.Driver)
-	err = buildConfig.LoadFilesByFormat("json", configJson)
+	dirConfig.WithOptions(config.ParseEnv)
+	dirConfig.AddDriver(json.Driver)
+	err = dirConfig.LoadFilesByFormat("json", dirConfigFile)
 	if err != nil {
-		err = fmt.Errorf("failed to load config from file (%s):\n%w", configJson, err)
+		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
 	}
 	baseDir, wd, err := getBaseDir()
 	if err != nil {
 		return
 	}
-	setConfig(buildConfig, "PROJECT_ROOT", baseDir)
-	replaceConfig(buildConfig, "<PROJECT_ROOT>", baseDir)
+	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
+	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
 	fmt.Println("[debug] working dir is:", wd)
-	fmt.Println("[debug] ************** config data: \n %#v\n", buildConfig.Data())
+	fmt.Println("[debug] ************** config data: \n %#v\n", dirConfig.Data())
 	return
 }
 
@@ -58,11 +58,11 @@ func getConfig(c *config.Config, key string) (val string, err error) {
 }
 
 func GetBuildConfig(key string) (val string, err error) {
-	return getConfig(buildConfig, key)
+	return getConfig(dirConfig, key)
 }
 
 func SetBuildConfig(key, val string) (err error) {
-	return setConfig(buildConfig, key, val)
+	return setConfig(dirConfig, key, val)
 }
 
 func getBaseDir() (baseDir, wd string, err error){
