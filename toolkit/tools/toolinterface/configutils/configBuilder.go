@@ -30,7 +30,7 @@ func SetupConfig() (err error) {
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
 	fmt.Println("[debug] working dir is:", wd)
-	fmt.Println("[debug] ************** config data: \n %#v\n", dirConfig.Data())
+	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
 	return
 }
 
