@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-package configutils
+package toolinterfaceutils
 
 import (
 	"fmt"
@@ -13,22 +13,24 @@ import (
 
 )
 
-const dirConfigFile = "configutils/directory_configs.json"
+const dirConfigFile = "/home/neha/repos/fresh/azurelinux/toolkit/tools/internal/toolinterface/toolinterfaceutils/directory_configs.json"
 var dirConfig = config.New("dir-config")
 
-func setupConfig() (err error) {
+func SetupConfig() (err error) {
 	dirConfig.WithOptions(config.ParseEnv)
 	dirConfig.AddDriver(json.Driver)
 	err = dirConfig.LoadFilesByFormat("json", dirConfigFile)
 	if err != nil {
 		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
 	}
+	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
 	baseDir, wd, err := getBaseDir()
 	if err != nil {
 		return
 	}
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
+//	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	fmt.Println("[debug] working dir is:", wd)
 	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
 	return
@@ -57,11 +59,11 @@ func getConfig(c *config.Config, key string) (val string, err error) {
 	return
 }
 
-func getBuildConfig(key string) (val string, err error) {
+func GetBuildConfig(key string) (val string, err error) {
 	return getConfig(dirConfig, key)
 }
 
-func setBuildConfig(key, val string) (err error) {
+func SetBuildConfig(key, val string) (err error) {
 	return setConfig(dirConfig, key, val)
 }
 

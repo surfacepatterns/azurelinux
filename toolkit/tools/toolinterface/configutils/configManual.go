@@ -15,7 +15,7 @@ import (
 var configMap map[string]string
 const configFile = "configutils/config.txt"
 
-func PopulateConfigFromFile() (err error) {
+func populateConfigFromFile() (err error) {
 	configMap = make(map[string]string)
 	wd, err := os.Getwd()
 	if err != nil {
@@ -47,12 +47,12 @@ func PopulateConfigFromFile() (err error) {
 	return
 }
 
-func SetConfigMap(key, val string) {
+func setConfigMap(key, val string) {
 	configMap[key] = val
 	return
 }
 
-func GetConfigMap(key string) (val string, err error) {
+func getConfigMap(key string) (val string, err error) {
 	val, exists := configMap[key]
 	if !exists {
 		err = fmt.Errorf("key does not exist")
