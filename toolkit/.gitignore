@@ -1,5 +1,4 @@
 out/
-tools/toolinterface/toolinterface
 
 # Temporary toolchain build files that are left behind after a failed build.
 scripts/toolchain/container/.bashrc
