@@ -10,8 +10,8 @@
 
 Summary:        Mariner kernel that has MSHV Host support
 Name:           kernel-mshv
-Version:        5.15.126.mshv3
-Release:        8%{?dist}
+Version:        5.15.126.mshv9
+Release:        3%{?dist}
 License:        GPLv2
 Group:          Development/Tools
 Vendor:         Microsoft Corporation
@@ -21,7 +21,7 @@ Source1:        config
 Source2:        cbl-mariner-ca-20211013.pem
 Source3:        50_mariner_mshv.cfg
 Source4:        50_mariner_mshv_menuentry
-Patch0:         perf_bpf_test_add_nonnull_argument.patch
+Patch0:         fix_python_3.12_build_errors.patch
 ExclusiveArch:  x86_64
 BuildRequires:  audit-devel
 BuildRequires:  bash
@@ -192,6 +192,10 @@ echo "initrd of kernel %{uname_r} removed" >&2
 %{_defaultdocdir}/linux-%{uname_r}/*
 
 %changelog
+* Tue Apr 09 2024 Mitch Zhu <mahuber@microsoft.com> - 5.15.126.mshv9-3
+- Update to v5.15.126.mshv9
+- Add patch to fix python 3.12 build errors
+
 * Mon Mar 25 2024 Manuel Huber <mahuber@microsoft.com> - 5.15.126.mshv3-8
 - Remove the tools subpackage.
 
