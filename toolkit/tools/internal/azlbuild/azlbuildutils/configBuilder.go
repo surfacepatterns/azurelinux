@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-package toolinterfaceutils
+package azlbuildutils
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 
 )
 
-const dirConfigFile = "/home/neha/repos/fresh/azurelinux/toolkit/tools/internal/toolinterface/toolinterfaceutils/directory_configs.json"
+const dirConfigFile = "/home/neha/repos/fresh/azurelinux/toolkit/tools/internal/azlbuild/azlbuildutils/directory_configs.json"
 var dirConfig = config.New("dir-config")
 
 func SetupConfig() (err error) {
@@ -30,7 +30,6 @@ func SetupConfig() (err error) {
 	}
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
-//	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	fmt.Println("[debug] working dir is:", wd)
 	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
 	return

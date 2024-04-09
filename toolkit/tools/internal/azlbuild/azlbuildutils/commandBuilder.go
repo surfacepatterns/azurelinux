@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-package toolinterfaceutils
+package azlbuildutils
 
 import (
 	"io"
