@@ -17,7 +17,7 @@ import (
 //					- there is a change in toolchain manifest
 //					- user wants to rebuild spec
 func buildStatus() (err error) {
-	fmt.Println("[debug] in buildStatus")
+	logger.Log.Debugf("in buildStatus")
 	return
 
 }

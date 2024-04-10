@@ -20,14 +20,14 @@ var (
 
 func BuildPackage(spec string) (err error) {
 	// build global configs
-	fmt.Println("[debug] spec is ", spec)
+	logger.Log.Debugf("spec is ", spec)
 	azlbuildutils.SetupConfig()
-	toolkitDir, _ = azlbuildutils.GetBuildConfig("toolkit_root")
-	fmt.Println("[debug] toolkit is ", toolkitDir)
-	projectDir, _ = azlbuildutils.GetBuildConfig("PROJECT_ROOT")
-	fmt.Println("[debug] projectDir is ", projectDir)
+	toolkitDir, _ = azlbuildutils.GetConfig("toolkit_root")
+	logger.Log.Debugf("toolkit is ", toolkitDir)
+	projectDir, _ = azlbuildutils.GetConfig("PROJECT_ROOT")
+	logger.Log.Debugf("projectDir is ", projectDir)
 
-	fmt.Println("[debug] Building packages: specs are (%s)", spec)
+	logger.Log.Debugf("Building packages: specs are (%s)", spec)
 
 	// check specs exist
 	specsDir, err := validateSpecExistance(spec)
@@ -65,7 +65,7 @@ func BuildPackage(spec string) (err error) {
 // validateSpecExistance checks if each spec in specList exists
 // If the spec exists, it assigns it the correct specsDir
 func validateSpecExistance(specList string) (specsDir string, err error) {
-	fmt.Println("[debug] Checking if spec exists for (%s)", specList)
+	logger.Log.Debugf("Checking if spec exists for (%s)", specList)
 	specMap, err := packagelist.ParsePackageList(specList)
 	if err != nil {
 		err = fmt.Errorf("failed to parse package list:\n%w", err)
@@ -80,11 +80,11 @@ func validateSpecExistance(specList string) (specsDir string, err error) {
 			err = fmt.Errorf("failed to FindSpecFiles:\n%w", err)
 			return "", err
 		} else {
-			fmt.Println("[debug] done with specreader, returned specFiles (%s)", specFiles)
+			logger.Log.Debugf("done with specreader, returned specFiles (%s)", specFiles)
 			return specsDir, nil
 		}
 	}
-	fmt.Println("[debug] done with specreader")
+	logger.Log.Debugf("done with specreader")
 	return
 }
 

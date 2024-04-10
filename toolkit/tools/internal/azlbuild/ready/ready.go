@@ -18,11 +18,11 @@ var (
 // ReadyChanges runs various tools to ready changes for contributing to upstream open source repo
 // TODO: use a command builder
 func ReadyChanges() (err error) {
-	fmt.Println("[debug] Ready changes")
+	logger.Log.Debugf("Ready changes")
 	azlbuildutils.SetupConfig()
-	scriptsDir, _ = azlbuildutils.GetBuildConfig("SCRIPTS_DIR")
-	toolkitDir, _ = azlbuildutils.GetBuildConfig("toolkit_root")
-	fmt.Println("[debug] scripts_dir is ", scriptsDir)
+	scriptsDir, _ = azlbuildutils.GetConfig("SCRIPTS_DIR")
+	toolkitDir, _ = azlbuildutils.GetConfig("toolkit_root")
+	logger.Log.Debugf("scripts_dir is ", scriptsDir)
 
 	err = checkManifests()
 	if err != nil {

@@ -23,15 +23,15 @@ func SetupConfig() (err error) {
 	if err != nil {
 		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
 	}
-	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
+	logger.Log.Debugf("************** config data:\n", dirConfig.Data())
 	baseDir, wd, err := getBaseDir()
 	if err != nil {
 		return
 	}
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
-	fmt.Println("[debug] working dir is:", wd)
-	fmt.Println("[debug] ************** config data:\n", dirConfig.Data())
+	logger.Log.Debugf("working dir is:", wd)
+	logger.Log.Debugf("************** config data:\n", dirConfig.Data())
 	return
 }
 
@@ -58,11 +58,13 @@ func getConfig(c *config.Config, key string) (val string, err error) {
 	return
 }
 
-func GetBuildConfig(key string) (val string, err error) {
+// GetConfig returns value for a given key, returns error if key not found
+func GetConfig(key string) (val string, err error) {
 	return getConfig(dirConfig, key)
 }
 
-func SetBuildConfig(key, val string) (err error) {
+// SetConfig sets key-value in config object
+func SetConfig(key, val string) (err error) {
 	return setConfig(dirConfig, key, val)
 }
 

@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/microsoft/azurelinux/toolkit/tools/internal/exe"
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/azlbuild/buildpackage"
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/azlbuild/ready"
+	"github.com/microsoft/azurelinux/toolkit/tools/internal/exe"
+	"github.com/microsoft/azurelinux/toolkit/tools/internal/logger"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -25,37 +26,41 @@ var (
 	buildImageFunc   = build.Command("image", "Build image(s)")
 	config           = buildImageFunc.Flag("config", "image config to build").Required().String()
 	configDir        = buildImageFunc.Flag("configDir", "directory containing image config").String()
-  )
+
+	logFlags         = exe.SetupLogFlags(app)
+)
 
 func main() {
 	app.Version(exe.ToolkitVersion)
 	var err error
+	logger.InitBestEffort(logFlags)
+
 	// TODO: in each app we should check if the args are correct or not: upfront. first thing to do
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 		case buildPackageFunc.FullCommand():
-			fmt.Println("If this is your first time building Azure Linux, please consider running `setup` to set up your machine")
-			fmt.Println("[debug] in build_package ")
-			fmt.Println("[debug] spec list is ", *spec)
+			logger.Log.Infof("If this is your first time building Azure Linux, please consider running `setup` to set up your machine")
+			logger.Log.Debugf("in build_package ")
+			logger.Log.Debugf("spec list is ", *spec)
 			err = buildpackage.BuildPackage(*spec)
 			if err != nil {
-				fmt.Println("[***ERROR***] failed to build package %v", err)
+				logger.Log.Fatalf("failed to build package %v", err)
 			}
-			fmt.Println("Please consider running `ready` before pushing your changes to upstream")
+			logger.Log.Infof("Please consider running `ready` before pushing your changes to upstream")
 		/*case buildImageFunc.FullCommand():
-			fmt.Println("[debug] in image ")
-		  	fmt.Println("[debug] config file is ", *config)
+			logger.Log.Debugf("in image ")
+			logger.Log.Debugf("config file is ", *config)
 		  	err = interfaceutils.BuildImage(*config)
 		  	if err != nil {
-				fmt.Println("[***ERROR***] failed to build image %v", err)
+				logger.Log.Fatalf("failed to build image %v", err)
 		}
-    	  	fmt.Println("Please consider running `ready` before pushing your changes to upstream")
+			logger.Log.Infof("Please consider running `ready` before pushing your changes to upstream")
 	*/	case readyFunc.FullCommand():
-			fmt.Println("[debug] in ready ")
+			logger.Log.Debugf("in ready ")
 			err = ready.ReadyChanges()
 			if err != nil {
-				fmt.Println("[***ERROR***] failed to ready changes %v", err)
+				logger.Log.Fatalf("failed to ready changes %v", err)
 			}
 		default:
-			fmt.Println("[***ERROR***] Invalid option")
+			logger.Log.Fatalf("Invalid option")
 	}
 }
