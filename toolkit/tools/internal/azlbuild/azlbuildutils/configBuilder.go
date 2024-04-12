@@ -5,33 +5,31 @@ package azlbuildutils
 
 import (
 	"fmt"
-	"strings"
 	"os"
+	"strings"
 
     config "github.com/gookit/config/v2"
 	"github.com/gookit/config/v2/json"
-
 )
 
-const dirConfigFile = "/home/neha/repos/fresh/azurelinux/toolkit/tools/internal/azlbuild/azlbuildutils/directory_configs.json"
+const dirConfigFile = "toolkit/tools/internal/azlbuild/azlbuildutils/directory_configs.json"
 var dirConfig = config.New("dir-config")
 
 func SetupConfig() (err error) {
-	dirConfig.WithOptions(config.ParseEnv)
-	dirConfig.AddDriver(json.Driver)
-	err = dirConfig.LoadFilesByFormat("json", dirConfigFile)
-	if err != nil {
-		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
-	}
-	logger.Log.Debugf("************** config data:\n", dirConfig.Data())
-	baseDir, wd, err := getBaseDir()
+	baseDir, err := getBaseDir()
 	if err != nil {
 		return
 	}
+	dirConfig.WithOptions(config.ParseEnv)
+	dirConfig.AddDriver(json.Driver)
+	err = dirConfig.LoadFilesByFormat("json", baseDir+dirConfigFile)
+	if err != nil {
+		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
+	}
+	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
-	logger.Log.Debugf("working dir is:", wd)
-	logger.Log.Debugf("************** config data:\n", dirConfig.Data())
+	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
 	return
 }
 
@@ -58,6 +56,16 @@ func getConfig(c *config.Config, key string) (val string, err error) {
 	return
 }
 
+func getBaseDir() (baseDir string, err error){
+	wd, err := os.Getwd()
+	if err != nil {
+		err = fmt.Errorf("failed to get working directory:\n%w", err)
+		return
+	}
+	baseDir = strings.Split(wd, "toolkit")[0]
+	return
+}
+
 // GetConfig returns value for a given key, returns error if key not found
 func GetConfig(key string) (val string, err error) {
 	return getConfig(dirConfig, key)
@@ -66,14 +74,4 @@ func GetConfig(key string) (val string, err error) {
 // SetConfig sets key-value in config object
 func SetConfig(key, val string) (err error) {
 	return setConfig(dirConfig, key, val)
-}
-
-func getBaseDir() (baseDir, wd string, err error){
-	wd, err = os.Getwd()
-	if err != nil {
-		err = fmt.Errorf("failed to get working directory:\n%w", err)
-		return
-	}
-	baseDir = strings.Split(wd, "toolkit")[0]
-	return
 }

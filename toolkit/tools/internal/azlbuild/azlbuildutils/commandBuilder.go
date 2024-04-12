@@ -17,7 +17,7 @@ import (
 //					- there is a change in toolchain manifest
 //					- user wants to rebuild spec
 func buildStatus() (err error) {
-	logger.Log.Debugf("in buildStatus")
+	fmt.Println("[DEBUG] in buildStatus")
 	return
 
 }
@@ -34,6 +34,7 @@ func buildStatusToolchain() (rebuildOpt bool, err error) {
 	return false, nil
 }
 
+// ExecCommands executes the application from the directory with the given arguments
 func ExecCommands(app, dir string, args ...string) (err error) {
 	cmd := exec.Command(app, args...)
 	if dir != "" {
