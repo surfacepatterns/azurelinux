@@ -1,4 +1,8 @@
 out/
+tools/cmd/azlbuild/azlbuild
+tools/cmd/buildimage/buildimage
+tools/cmd/buildpackage/buildpackage
+tools/cmd/ready/ready
 
 # Temporary toolchain build files that are left behind after a failed build.
 scripts/toolchain/container/.bashrc

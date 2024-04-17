@@ -42,7 +42,7 @@ func specLint() (err error) {
 
 // checkManifest runs check_manifests script to spot updates required in manifest files
 func checkManifests() (err error) {
-	err = azlbuildutils.ExecCommands("make",
+	err = azlbuildutils.ExecCommandStdout("make",
 	toolkitDir,
 	"check-manifests")
 	return
@@ -51,7 +51,7 @@ func checkManifests() (err error) {
 // updateLicenses updates licenses.json file if there are any changes in spec licenses
 func updateLicenses() (err error) {
 	var script = "license_map.py"
-	err = azlbuildutils.ExecCommands("python3",
+	err = azlbuildutils.ExecCommandStdout("python3",
 		scriptsDir,
 		script)
 	return

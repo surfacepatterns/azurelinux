@@ -22,17 +22,17 @@ func populateConfigFromFile() (err error) {
 		return fmt.Errorf("failed to get working directory:\n%w", err)
 	}
 	base_dir := strings.Split(wd, "toolkit")[0]
-	logger.Log.Debugf("base is ", base_dir)
-	logger.Log.Debugf("wd is ", wd)
+	fmt.Println("[DEBUG] base is ", base_dir)
+	fmt.Println("[DEBUG] wd is ", wd)
 	SetConfigMap("PROJECT_ROOT", base_dir)
 
 	lines, err := file.ReadLines(wd+"/"+configFile)
-	logger.Log.Debugf("opened file: ", len(lines))
+	fmt.Println("[DEBUG] opened file: ", len(lines))
 	if err != nil {
 		return fmt.Errorf("failed to open file:\n%w", err)
 	}
 	for _, line := range lines {
-		logger.Log.Debugf("line is", line)
+		fmt.Println("[DEBUG] line is", line)
 		entry := strings.Split(line,":")
 		if len(entry) != 2 {
 			logger.Log.Errorf("not a config entry", entry[0])
@@ -40,9 +40,9 @@ func populateConfigFromFile() (err error) {
 		}
 		entry[1] = strings.Replace(entry[1], "<PROJECT_ROOT>/", base_dir, -1)
 		SetConfigMap(entry[0], entry[1])
-		logger.Log.Debugf("entry is is", entry[0], ":",entry[1] )
+		fmt.Println("[DEBUG] entry is is", entry[0], ":",entry[1] )
 		i,_ := GetConfigMap(entry[0])
-		logger.Log.Debugf("returnied ",i)
+		fmt.Println("[DEBUG] returnied ",i)
 	}
 	return
 }

@@ -26,10 +26,10 @@ func SetupConfig() (err error) {
 	if err != nil {
 		err = fmt.Errorf("failed to load config from file (%s):\n%w", dirConfigFile, err)
 	}
-	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
+//	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
 	setConfig(dirConfig, "PROJECT_ROOT", baseDir)
 	replaceConfig(dirConfig, "<PROJECT_ROOT>", baseDir)
-	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
+//	fmt.Println("[DEBUG] ************** config data:\n", dirConfig.Data())
 	return
 }
 

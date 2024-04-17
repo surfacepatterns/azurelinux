@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	azlSpecsDirs = [...] string {"SPECS", "SPECS-EXTENDED", "SPECS-SIGNED"}
+	azlSpecsDirs = [...] string {"SPECS", "SPECS-EXTENDED"}
 	// get relevant configs
 	toolkitDir string
 	projectDir string
@@ -22,9 +22,17 @@ func BuildPackage(spec string) (err error) {
 	// build global configs
 	fmt.Println("[DEBUG] spec is ", spec)
 	azlbuildutils.SetupConfig()
-	toolkitDir, _ = azlbuildutils.GetConfig("toolkit_root")
+	toolkitDir, err = azlbuildutils.GetConfig("toolkit_root")
+	if err != nil {
+		err = fmt.Errorf("failed to get config toolkit dir:\n%w", err)
+		return
+	}
 	fmt.Println("[DEBUG] toolkit is ", toolkitDir)
-	projectDir, _ = azlbuildutils.GetConfig("PROJECT_ROOT")
+	projectDir, err = azlbuildutils.GetConfig("PROJECT_ROOT")
+	if err != nil {
+		err = fmt.Errorf("failed to get config project dir:\n%w", err)
+		return
+	}
 	fmt.Println("[DEBUG] projectDir is ", projectDir)
 
 	fmt.Println("[DEBUG] Building packages: specs are (%s)", spec)
@@ -33,7 +41,7 @@ func BuildPackage(spec string) (err error) {
 	specsDir, err := validateSpecExistance(spec)
 	if err != nil {
 		err = fmt.Errorf("failed to validate specs:\n%w", err)
-		return err
+		return
 	}
 
 	// TODO: set sepcs dir in config
@@ -42,9 +50,12 @@ func BuildPackage(spec string) (err error) {
 
 	// build toolchain if required
 
+	err = BuildToolchain()
+	if err != nil {
+		err = fmt.Errorf("failed to build toolchain:\n%w", err)
+		return
+	}
 	// put toolchain rpms into toolchain_archive and use it
-
-	// build tools if required
 
 	// set extra configs
 
@@ -95,7 +106,7 @@ func buildSpecs (specs, specsDir string) (err error) {
 	srpm_pack_list +=specs
 //	srpm_pack_list +="\""
 
-	err = azlbuildutils.ExecCommands("make",
+	err = azlbuildutils.ExecCommandStdout("make",
 		toolkitDir,
 		"build-packages",
 		"REBUILD_TOOLS=y",

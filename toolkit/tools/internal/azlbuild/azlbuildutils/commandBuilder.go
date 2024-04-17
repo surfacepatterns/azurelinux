@@ -34,8 +34,8 @@ func buildStatusToolchain() (rebuildOpt bool, err error) {
 	return false, nil
 }
 
-// ExecCommands executes the application from the directory with the given arguments
-func ExecCommands(app, dir string, args ...string) (err error) {
+// ExecCommandStdout executes the application from the directory with the given arguments, and redirects output to stdout
+func ExecCommandStdout(app, dir string, args ...string) (err error) {
 	cmd := exec.Command(app, args...)
 	if dir != "" {
 		cmd.Dir = dir
@@ -54,4 +54,20 @@ func ExecCommands(app, dir string, args ...string) (err error) {
         return
 	}
     return
+}
+
+// ExecCommandBuffer executes the application from the directory with the given arguments, and stores output to buffer
+func ExecCommandBuffer(app, dir string, args ...string) (out string, err error) {
+	cmd := exec.Command(app, args...)
+	if dir != "" {
+		cmd.Dir = dir
+	}
+
+	outBuff, err := cmd.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("failed to exec cmd.Run():\n%w", err)
+        return
+	}
+	out = string(outBuff)
+	return
 }
