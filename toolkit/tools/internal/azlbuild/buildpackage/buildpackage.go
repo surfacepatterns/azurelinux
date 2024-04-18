@@ -86,7 +86,7 @@ func validateSpecExistance(specList string) (specsDir string, err error) {
 	// TODO: currently, we have a limitation that all specs to be built must be present in the same specsDir
 	// TODO: return error only if spec is not found in any specsDir
 	for _, specsDir := range azlSpecsDirs {
-		specFiles, err := specreaderutils.FindSpecFiles(projectDir+specsDir, specMap)
+		_, err := specreaderutils.FindSpecFiles(projectDir+specsDir, specMap)
 		if err != nil {
 			err = fmt.Errorf("failed to FindSpecFiles:\n%w", err)
 			return "", err
