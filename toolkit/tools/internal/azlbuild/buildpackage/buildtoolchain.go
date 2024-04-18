@@ -61,7 +61,7 @@ func runLKG () (DAILY_BUILD_ID string, err error) {
 	_, substring, _ := strings.Cut(out, "DAILY_BUILD_ID=")
 	_, substring, _ = strings.Cut(substring, "'")
 	DAILY_BUILD_ID, _, _ = strings.Cut(substring, "'")
-	fmt.Println("DAILY_BUILD_ID:", DAILY_BUILD_ID)
+//	fmt.Println("DAILY_BUILD_ID:", DAILY_BUILD_ID)
 	return
 }
 
