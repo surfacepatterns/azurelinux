@@ -17,7 +17,7 @@ import (
 //					- there is a change in toolchain manifest
 //					- user wants to rebuild spec
 func buildStatus() (err error) {
-	fmt.Println("[DEBUG] in buildStatus")
+	//fmt.Println("[DEBUG] in buildStatus")
 	return
 
 }
@@ -56,7 +56,7 @@ func ExecCommandStdout(app, dir string, args ...string) (err error) {
     return
 }
 
-// ExecCommandBuffer executes the application from the directory with the given arguments, and stores output to buffer
+// ExecCommandBuffer executes the application from the directory with the given arguments, and stores output to out buffer
 func ExecCommandBuffer(app, dir string, args ...string) (out string, err error) {
 	cmd := exec.Command(app, args...)
 	if dir != "" {
