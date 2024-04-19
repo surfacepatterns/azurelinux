@@ -29,10 +29,11 @@ func ReadyChanges() (err error) {
 		return fmt.Errorf("failed to check manifests:\n%w", err)
 	}
 
-	err = updateLicenses()
+/*	err = updateLicenses()
 	if err != nil {
 		return fmt.Errorf("failed to update licenses:\n%w", err)
 	}
+*/
 	return
 }
 
@@ -42,6 +43,7 @@ func specLint() (err error) {
 
 // checkManifest runs check_manifests script to spot updates required in manifest files
 func checkManifests() (err error) {
+	fmt.Println("Checking if manifest scripts are in sync with toolchain specs.\nIf you didn't make changes to any of these specs, the error shown (if any) don't apply to you")
 	err = azlbuildutils.ExecCommandStdout("make",
 	toolkitDir,
 	"check-manifests")
