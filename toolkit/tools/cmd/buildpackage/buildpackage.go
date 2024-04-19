@@ -4,7 +4,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/azlbuild/buildpackage"
@@ -27,6 +26,6 @@ func main() {
 	logger.Log.Debugf("spec is ", *spec)
 	err = buildpackage.BuildPackage(*spec)
 	if err != nil {
-		logger.Log.Fatalf("Failed to build package:\n%w", err)
+		logger.Log.Fatalf("Failed to build package:\n%v", err)
 	}
 }

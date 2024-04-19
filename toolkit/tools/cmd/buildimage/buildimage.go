@@ -25,7 +25,7 @@ func main() {
 	logger.InitBestEffort(logFlags)
 	err = BuildImage(*config)
 	if err != nil {
-		logger.Log.Fatalf("Failed to build image:\n%w", err)
+		logger.Log.Fatalf("Failed to build image:\n%v", err)
 	}
 }
 

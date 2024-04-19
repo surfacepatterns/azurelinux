@@ -24,6 +24,6 @@ func main() {
 	logger.InitBestEffort(logFlags)
 	err = ready.ReadyChanges()
 	if err != nil {
-		logger.Log.Fatalf("Failed to ready changes:\n%w", err)
+		logger.Log.Fatalf("Failed to ready changes:\n%v", err)
 	}
 }
