@@ -50,6 +50,17 @@ func checkManifests() (err error) {
 	return
 }
 
+func check_manifests2() (err error) {
+	var toolchainScriptsDir = toolkitDir+"/resources/manifests/package"
+	err = azlbuildutils.ExecCommandStdout("sh",
+		toolchainScriptsDir,
+		"update_manifests.sh",
+		"aarch64",
+		"/home/neha/repos/demo/toolchain_built_rpms_all.tar.gz")
+	//toolchain/check_manifests.sh
+	return
+}
+
 // updateLicenses updates licenses.json file if there are any changes in spec licenses
 func updateLicenses() (err error) {
 	var script = "license_map.py"

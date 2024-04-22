@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	app      = kingpin.New("buildpackage", "A command-line interface to build packages in azurelinux")
-	spec     = app.Flag("spec", "space separated \"\" enclosed name(s) of spec(s) to build").Required().String()
-	logFlags = exe.SetupLogFlags(app)
+	app       = kingpin.New("buildpackage", "A command-line interface to build packages in azurelinux")
+	spec      = app.Flag("spec", "space separated \"\" enclosed name(s) of spec(s) to build").Required().String()
+	buildType = app.Flag("buildType", "build spec(s) with full AZL or isolated. Supported: full, isolated").Enum("full", "isolated")
+	logFlags  = exe.SetupLogFlags(app)
 )
 
 func main() {
@@ -23,8 +24,11 @@ func main() {
 	var err error
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	logger.InitBestEffort(logFlags)
-	logger.Log.Debugf("spec is ", *spec)
-	err = buildpackage.BuildPackage(*spec)
+	logger.Log.Debugf("spec is (%s)", *spec)
+	if *buildType == "" {
+		kingpin.Fatalf("buildType must be specified. Supported: full, isolated")
+	}
+	err = buildpackage.BuildPackage(*spec, *buildType)
 	if err != nil {
 		logger.Log.Fatalf("Failed to build package:\n%v", err)
 	}

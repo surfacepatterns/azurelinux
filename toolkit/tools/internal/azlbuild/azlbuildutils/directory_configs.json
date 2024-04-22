@@ -32,5 +32,7 @@
 	"TOOLCHAIN_MANIFESTS_DIR":"$(MANIFESTS_DIR)/package",
 	"RPMS_DIR":"$(OUT_DIR)/RPMS",
 	"SRPMS_DIR":"$(OUT_DIR)/SRPMS",
-	"IMAGES_DIR":"$(OUT_DIR)/images"
+	"IMAGES_DIR":"$(OUT_DIR)/images",
+	"MANIFESTS_DIR":"$(RESOURCES_DIR)/manifests",
+	"META_USER_DATA_DIR":"(RESOURCES_DIR)/assets/meta-user-data"
 }

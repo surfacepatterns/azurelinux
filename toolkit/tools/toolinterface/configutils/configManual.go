@@ -41,7 +41,7 @@ func populateConfigFromFile() (err error) {
 		entry[1] = strings.Replace(entry[1], "<PROJECT_ROOT>/", base_dir, -1)
 		setConfigMap(entry[0], entry[1])
 //		fmt.Println("[DEBUG] entry is is", entry[0], ":",entry[1] )
-		_,_ := getConfigMap(entry[0])
+		_,_ = getConfigMap(entry[0])
 //		fmt.Println("[DEBUG] returnied ",i)
 	}
 	return

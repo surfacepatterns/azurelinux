@@ -21,6 +21,7 @@ var (
 
 	buildPackageFunc = build.Command("package", "Build package(s)")
 	spec             = buildPackageFunc.Flag("spec", "space separated \"\" enclosed name(s) of spec(s) to build").Default("").String()
+	buildType        = buildPackageFunc.Flag("buildType", "build spec(s) with full AZL or isolated. Supported: full, isolated").Required().Enum("full", "isolated")
 
 	buildImageFunc   = build.Command("image", "Build image(s)")
 	config           = buildImageFunc.Flag("config", "image config to build").Required().String()
@@ -39,8 +40,11 @@ func main() {
 		case buildPackageFunc.FullCommand():
 			logger.Log.Infof("If this is your first time building Azure Linux, please consider running `setup` to set up your machine")
 			logger.Log.Debugf("in build_package ")
-			logger.Log.Debugf("spec list is ", *spec)
-			err = buildpackage.BuildPackage(*spec)
+			logger.Log.Debugf("spec list:(%s)", *spec)
+			if *buildType == "" {
+				kingpin.Fatalf("buildType must be specified. Supported: full, isolated")
+			}
+			err = buildpackage.BuildPackage(*spec, *buildType)
 			if err != nil {
 				logger.Log.Fatalf("failed to build package %v", err)
 			}

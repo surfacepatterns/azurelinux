@@ -15,6 +15,9 @@ import (
 const dirConfigFile = "toolkit/tools/internal/azlbuild/azlbuildutils/directory_configs.json"
 var dirConfig = config.New("dir-config")
 
+// TODO: override configs provided on cli
+// TODO: read all configs from json and replace variables
+
 func SetupConfig() (err error) {
 	baseDir, err := getBaseDir()
 	if err != nil {

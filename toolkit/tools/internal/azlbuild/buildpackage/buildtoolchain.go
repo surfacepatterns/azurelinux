@@ -5,7 +5,6 @@ package buildpackage
 
 import (
 	"fmt"
-	//"os"
 	"strings"
 
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/azlbuild/azlbuildutils"
@@ -32,7 +31,6 @@ func BuildToolchain() (err error) {
 		return err
 	}
 
-	//os.Exit(0)
 //	err = packageToolchain()
 	if err != nil {
 		err = fmt.Errorf("failed to package toolchain:\n%w", err)
@@ -83,6 +81,7 @@ func buildToolchain (DAILY_BUILD_ID string) (err error) {
 }
 
 // packageToolchain packages built toolchain RPMs into tar.gz
+// TODO: implement
 func packageToolchain () (err error) {
 	// either at TOOLCHAIN_RPMS_DIR or at CACHED_RPMS_DIR
 	// store at TOOLCHAIN_ARCHIVE
@@ -97,8 +96,7 @@ func packageToolchain () (err error) {
 		toolchainRpmsDir,
 		"-cvf",
 		"",
-		"REBUILD_TOOLCHAIN=n",
-		"DAILY_BUILD_ID=3-0-20240411")
+		"REBUILD_TOOLCHAIN=n")
 
 	if err != nil {
 		return

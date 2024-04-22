@@ -4,7 +4,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/exe"

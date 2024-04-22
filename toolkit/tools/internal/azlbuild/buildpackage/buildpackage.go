@@ -18,7 +18,13 @@ var (
 	projectDir string
 )
 
-func BuildPackage(spec string) (err error) {
+const (
+	// supported build types
+	BuildTypeFull     = "full" // build target spec(s) with full specs directory
+	BuildTypeIsolated = "isolated" // build target spec(s) in isolation
+)
+
+func BuildPackage(spec, buildType string) (err error) {
 	// build global configs
 //	fmt.Println("[DEBUG] spec is ", spec)
 	azlbuildutils.SetupConfig()
@@ -62,7 +68,7 @@ func BuildPackage(spec string) (err error) {
 	// show dependency graph - use graphanalytics tool
 
 	// build package
-	err = buildSpecs(spec, specsDir)
+	err = buildSpecs(spec, specsDir, buildType)
 	if err != nil {
 		err = fmt.Errorf("failed to build specs:\n%w", err)
 		return err
@@ -85,6 +91,7 @@ func validateSpecExistance(specList string) (specsDir string, err error) {
 
 	// TODO: currently, we have a limitation that all specs to be built must be present in the same specsDir
 	// TODO: return error only if spec is not found in any specsDir
+	// TODO: read specs dir from config if it has been redefined by user in config json
 	for _, specsDir := range azlSpecsDirs {
 		_, err := specreaderutils.FindSpecFiles(projectDir+specsDir, specMap)
 		if err != nil {
@@ -92,25 +99,68 @@ func validateSpecExistance(specList string) (specsDir string, err error) {
 			return "", err
 		} else {
 //			fmt.Println("[DEBUG] done with specreader, returned specFiles (%s)", specFiles)
-			return specsDir, nil
+			return projectDir+specsDir, nil
 		}
 	}
 //	fmt.Println("[DEBUG] done with specreader")
 	return
 }
 
-func buildSpecs (specs, specsDir string) (err error) {
+// buildSpecs builds specs in specsDir either in full or isolation
+func buildSpecs (specs, specsDir, buildType string) (err error) {
 	// TODO: use a command builder
 	// TODO: some of these arguments can be removed if/when tools start reading directly from config
-	srpm_pack_list := "SRPM_PACK_LIST="
-	srpm_pack_list +=specs
-//	srpm_pack_list +="\""
+	// TODO: build in full by default
+	// TODO: add toolchain_archive to make
+
+	switch buildType {
+	case BuildTypeFull:
+		return buildSpecsFull(specs, specsDir)
+	case BuildTypeIsolated:
+		return buildSpecsIsolated(specs, specsDir)
+	default:
+		err = fmt.Errorf("incorrect buildType for building packages")
+		return
+	}
+	return
+}
+
+// buildSpecsFull builds specs in specsDir in full
+func buildSpecsFull(specs, specsDir string) (err error) {
+	specs_dir := "SPECS_DIR="
+	specs_dir += specsDir
+	package_build_list := "PACKAGE_BUILD_LIST="
+	package_build_list +=specs
+	package_rebuild_list := "PACKAGE_REBUILD_LIST="
+	package_rebuild_list +=specs
 
 	err = azlbuildutils.ExecCommandStdout("make",
 		toolkitDir,
 		"build-packages",
 		"REBUILD_TOOLS=y",
-		srpm_pack_list)
+		package_build_list,
+		package_rebuild_list)
+		//specs_dir)
+
+	if err != nil {
+		return
+	}
+	return
+}
+
+// buildSpecsIsolated builds specs in specsDir in isolation
+func buildSpecsIsolated(specs, specsDir string) (err error) {
+	specs_dir := "SPECS_DIR="
+	specs_dir += specsDir
+	srpm_pack_list := "SRPM_PACK_LIST="
+	srpm_pack_list +=specs
+
+	err = azlbuildutils.ExecCommandStdout("make",
+		toolkitDir,
+		"build-packages",
+		"REBUILD_TOOLS=y",
+		srpm_pack_list,
+		specs_dir)
 
 	if err != nil {
 		return
