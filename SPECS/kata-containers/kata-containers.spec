@@ -215,6 +215,9 @@ ln -sf %{_bindir}/kata-runtime %{buildroot}%{_prefix}/local/bin/kata-runtime
 %exclude %{kataosbuilderdir}/rootfs-builder/ubuntu
 
 %changelog
+* Fri Jun 07 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 3.2.0.azl1-1
+- Auto-upgrade to 3.2.0.azl1
+
 * Thu May 02 2024 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 3.2.0.azl1-1
 - Auto-upgrade to 3.2.0.azl1
 
