@@ -23,7 +23,8 @@
 
 # DEFAULT_HYPERVISOR: makes configuration.toml link to configuration-clh.toml.
 %global runtime_make_vars       KERNELTYPE="compressed" \\\
-                                KERNELPARAMS="systemd.legacy_systemd_cgroup_controller=yes systemd.unified_cgroup_hierarchy=0" \\\
+                                KERNELPARAMS="" \\\
+                                DEFSANDBOXCGROUPONLY=true \\\
                                 DEFVIRTIOFSDAEMON=%{_libexecdir}/"virtiofsd-rs" \\\
                                 DEFSTATICRESOURCEMGMT_CLH=true \\\
                                 DEFSTATICSANDBOXWORKLOADMEM=1792 \\\
@@ -39,7 +40,7 @@
 Summary:        Kata Containers
 Name:           kata-containers
 Version:        3.2.0.azl2
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        ASL 2.0
 Vendor:         Microsoft Corporation
 URL:            https://github.com/microsoft/kata-containers
