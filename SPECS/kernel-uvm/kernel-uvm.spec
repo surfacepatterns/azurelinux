@@ -11,7 +11,7 @@
 Summary:        Linux Kernel for Kata UVM
 Name:           kernel-uvm
 Version:        6.1.58.mshv4
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
