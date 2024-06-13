@@ -80,6 +80,7 @@ const (
 const (
 	overlay        = "overlay"
 	rootMountPoint = "/"
+	bootMountPoint = "/boot"
 
 	// rpmDependenciesDirectory is the directory which contains RPM database. It is not required for images that do not contain RPM.
 	rpmDependenciesDirectory = "/var/lib/rpm"
@@ -1090,11 +1091,29 @@ func ConfigureDiskBootloader(bootType string, encryptionEnable bool, readOnlyVer
 	timestamp.StartEvent("configuring bootloader", nil)
 	defer timestamp.StopEvent(nil)
 
-	const rootMountPoint = "/"
-	const bootMountPoint = "/boot"
+	if mountPointMap[rootMountPoint] == NullDevice {
+		// In case of overlay device being mounted at root, no need to change the bootloader.
+		return
+	}
 
-	var rootDevice string
+	rootPartitionSetting := configuration.FindRootPartitionSetting(partitionSettings)
+	if rootPartitionSetting == nil {
+		err = fmt.Errorf("failed to find partition setting for root mountpoint")
+		return
+	}
+	rootMountIdentifier := rootPartitionSetting.MountIdentifier
 
+	return ConfigureDiskBootloaderWithRootMountIdType(bootType, encryptionEnable, readOnlyVerityRootEnable,
+		rootMountIdentifier, kernelCommandLine, installChroot, diskDevPath, mountPointMap, encryptedRoot, readOnlyRoot,
+		enableGrubMkconfig, includeLegacyGrubCfg)
+}
+
+func ConfigureDiskBootloaderWithRootMountIdType(bootType string, encryptionEnable bool, readOnlyVerityRootEnable bool,
+	rootMountIdentifier configuration.MountIdentifier, kernelCommandLine configuration.KernelCommandLine,
+	installChroot *safechroot.Chroot, diskDevPath string, mountPointMap map[string]string,
+	encryptedRoot diskutils.EncryptedRootDevice, readOnlyRoot diskutils.VerityDevice, enableGrubMkconfig bool,
+	includeLegacyGrubCfg bool,
+) (err error) {
 	// Add bootloader. Prefer a separate boot partition if one exists.
 	bootDevice, isBootPartitionSeparate := mountPointMap[bootMountPoint]
 	bootPrefix := ""
@@ -1123,12 +1142,7 @@ func ConfigureDiskBootloader(bootType string, encryptionEnable bool, readOnlyVer
 	}
 
 	// Add grub config to image
-	rootPartitionSetting := configuration.FindRootPartitionSetting(partitionSettings)
-	if rootPartitionSetting == nil {
-		err = fmt.Errorf("failed to find partition setting for root mountpoint")
-		return
-	}
-	rootMountIdentifier := rootPartitionSetting.MountIdentifier
+	var rootDevice string
 	if encryptionEnable {
 		// Encrypted devices don't currently support identifiers
 		rootDevice = mountPointMap[rootMountPoint]
