@@ -46,7 +46,7 @@ Provides:       shim-signed = %{version}-%{release}
 Provides:       shim-signed-%{efiarch} = %{version}-%{release}
 
 # This is when grub was updated to use our %%{efidir} instead of BOOT
-Conflicts:      grub2-efi-binary < 2.06-19
+Conflicts:      grub2-efi-binary < 2.12-2
 
 BuildRequires:  shim-unsigned-%{efiarch} = %{version}-%{release}
 BuildRequires:  binutils

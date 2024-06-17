@@ -8,9 +8,14 @@
 # suffix, our kernel version does not.
 %define kernelver %{version}-%{release}
 
+# noxsaves: Azure CVM instances have trouble booting due to the hypervisor
+# not reporting an available CPU feature - shadow stack (X86_FEATURE_SHSTK).
+# We need to temporarily turn it off by disabling xsaves until the problem
+# is fixed on Azure. Since shadow stack depends on xsaves, disabling xsaves
+# ensures the feature bit for shadow stack is also turned off.
 %define cmdline console=ttyS0 noxsaves
 
-Summary:        Linux Kernel
+Summary:        Unified Kernel Image
 Name:           kernel-uki
 Version:        6.6.29.1
 Release:        5%{?dist}
@@ -64,11 +69,6 @@ install -D -t %{buildroot}/lib/modules/%{kernelver} vmlinuz-uki.efi
 - include i18n (kbd package) in UKI, to provide loadkeys binary so
   systemd-vconsole-setup works
 
-* Tue May 07 2024 Thien Trung Vuong <tvuong@microsoft.com> - 6.6.29.1-4
-- Match kernel version and release
-
-* Thu Apr 25 2024 Dan Streetman <ddstreet@microsoft.com> - 6.6.22.1-2
-- initial package
-- The following lines are here solely to satisfy tooling.
-- Initial CBL-Mariner import from Photon (license: Apache2).
-- License verified
+* Thu Apr 25 2024 Dan Streetman <ddstreet@microsoft.com> - 6.6.29.1-4
+- Original version for Azure Linux.
+- License verified.
