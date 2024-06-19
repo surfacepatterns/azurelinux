@@ -295,7 +295,7 @@ Distribution:   Azure Linux
 %define requires_package_virtiofsd Requires: vhostuser-backend(fs)
 %define obsoletes_package_virtiofsd Obsoletes: %{name}-virtiofsd < %{evr}
 %else
-%define requires_package_virtiofsd Requires: virtiofsd
+%define requires_package_virtiofsd Requires: virtiofsd == 1.8.0-3
 %endif
 
 %if %{have_virgl}
@@ -659,7 +659,7 @@ BuildRequires: rutabaga-gfx-ffi-devel
 %endif
 
 %if %{user_static}
-BuildRequires: glibc-static >= 2.38-5
+BuildRequires: glibc-static >= 2.38-6
 BuildRequires: glib2-static zlib-static
 BuildRequires: pcre2-static
 %endif
