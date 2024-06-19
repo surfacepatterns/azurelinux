@@ -1,7 +1,8 @@
 {
     "packages": [
         "systemd-boot-unsigned",
-        "kernel-uki"
+        "kernel-uki",
+        "tpm2-tools"
     ],
     "_comment": ""
 }

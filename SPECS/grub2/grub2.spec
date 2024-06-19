@@ -364,6 +364,7 @@ cp $GRUB_PXE_MODULE_SOURCE $EFI_BOOT_DIR/$GRUB_PXE_MODULE_NAME
 %changelog
 * Mon Jun 17 2024 Dan Streetman <ddstreet@microsoft.com> - 2.12-2
 - move EFI binary from BOOT into efidir
+
 * Fri Jun 14 2024 Gary Swalling <gaswal@microsoft.com> - 2.12-1
 - Upgrade to 2.12 - fixes and features in latest full release
 
