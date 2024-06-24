@@ -29,7 +29,7 @@
 Summary:        Linux Kernel
 Name:           kernel
 Version:        6.6.29.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -404,6 +404,9 @@ echo "initrd of kernel %{uname_r} removed" >&2
 %{_sysconfdir}/bash_completion.d/bpftool
 
 %changelog
+* Mon Jun 24 2024 Rachel Menge <rachelmenge@microsoft.com> - 6.6.29.1-5
+- Minimize aarch64 boot and size
+
 * Fri May 31 2024 Thien Trung Vuong <tvuong@microsoft.com> - 6.6.29.1-4
 - Enable CONFIG_AMD_MEM_ENCRYPT, CONFIG_SEV_GUEST
 
