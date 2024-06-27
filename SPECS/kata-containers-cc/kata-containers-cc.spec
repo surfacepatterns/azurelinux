@@ -240,6 +240,7 @@ install -D -m 0755 %{_builddir}/%{name}-%{version}/tools/osbuilder/image-builder
 %systemd_post tardev-snapshotter.service
 
 systemctl enable tardev-snapshotter.service
+systemctl start tardev-snapshotter.service
 
 %files
 %{share_kata}/vmlinux.container
