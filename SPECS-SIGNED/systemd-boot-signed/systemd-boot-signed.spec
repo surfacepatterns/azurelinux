@@ -81,6 +81,9 @@ popd
 
 %files -n systemd-boot-signed
 /usr/lib/systemd/boot/efi/*
+/usr/share/man/man5/loader.conf.5.gz
+/usr/share/man/man7/sd-boot.7.gz
+/usr/share/man/man7/systemd-boot.7.gz
 
 %changelog
 * Tue June 25 2024 Thien Trung Vuong <tvuong@microsoft.com> - 255-14
