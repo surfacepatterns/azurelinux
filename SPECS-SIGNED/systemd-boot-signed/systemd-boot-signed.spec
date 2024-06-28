@@ -7,7 +7,7 @@
 # See README.build-in-place
 %bcond inplace 0
 Summary:        Signed systemd-boot for %{buildarch} systems
-Name:           systemd-signed-%{buildarch}
+Name:           systemd-boot-signed-%{buildarch}
 %if %{without inplace}
 Version:        255
 %else
@@ -79,7 +79,7 @@ cp -rp ./. %{buildroot}/
 
 popd
 
-%files -n systemd-boot
+%files -n systemd-boot-signed
 /usr/lib/systemd/boot/efi/*
 
 %changelog
