@@ -249,6 +249,31 @@ func TestCustomizeImageAdditionalDirs(t *testing.T) {
 	verifyFileContentsSame(t, animalsFileOrigPath, animalsFileNewPath)
 }
 
+func TestCustomizeImageUpdateUsers(t *testing.T) {
+	baseImage := checkSkipForCustomizeImage(t, baseImageTypeCoreEfi)
+
+	testTmpDir := filepath.Join(tmpDir, "TestCustomizeImageUpdateUsers")
+	buildDir := filepath.Join(testTmpDir, "build")
+	configFile := filepath.Join(testDir, "users-config.yaml")
+	outImageFilePath := filepath.Join(testTmpDir, "image.raw")
+
+	// Customize image.
+	err := CustomizeImageWithConfigFile(buildDir, configFile, baseImage, nil, outImageFilePath, "raw", "",
+		false /*useBaseImageRpmRepos*/, false /*enableShrinkFilesystems*/)
+	if !assert.NoError(t, err) {
+		return
+	}
+
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	if !assert.NoError(t, err) {
+		return
+	}
+	defer imageConnection.Close()
+
+	//
+
+}
+
 func TestAddCustomizerRelease(t *testing.T) {
 	if os.Geteuid() != 0 {
 		t.Skip("Test must be run as root because it uses a chroot")

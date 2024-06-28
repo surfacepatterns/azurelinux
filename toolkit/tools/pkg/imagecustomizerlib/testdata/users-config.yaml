@@ -1,5 +1,14 @@
 os:
   users:
-  - name: test
+  - name: test1
+    uid: 10000
+    startupCommand: /usr/sbin/nologin
+
+  - name: test2
+    passwordExpiresDays: 10
+    sshPublicKeys:
+    - ssh-ed25519 NOT/A/REAL/PUBLIC/KEY test@testmachine
     secondaryGroups:
     - sudo
+
+  - name: test3
