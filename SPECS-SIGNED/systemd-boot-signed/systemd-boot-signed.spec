@@ -63,7 +63,7 @@ This package contains the signed version that works with Secure Boot.
 
 %build
 mkdir rpm_contents
-push rpm_contents
+pushd rpm_contents
 
 # This spec's whole purpose is to inject the signed systemd-boot binary
 rpm2cpio %{SOURCE0} | cpio -idmv
