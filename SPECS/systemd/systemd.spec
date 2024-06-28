@@ -939,6 +939,7 @@ systemd-tmpfiles --create &>/dev/null || :
 # https://bugzilla.redhat.com/show_bug.cgi?id=1647172.
 # We also do this for user units, see
 # https://fedoraproject.org/wiki/Changes/Systemd_presets_for_user_units.
+echo "systemd SPEC reset all services"
 systemctl preset-all &>/dev/null || :
 systemctl --global preset-all &>/dev/null || :
 

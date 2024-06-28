@@ -239,6 +239,7 @@ install -D -m 0755 %{_builddir}/%{name}-%{version}/tools/osbuilder/image-builder
 %post
 %systemd_post tardev-snapshotter.service
 
+echo "kata-containers SPEC enable and start service"
 systemctl enable tardev-snapshotter.service
 systemctl start tardev-snapshotter.service
 
