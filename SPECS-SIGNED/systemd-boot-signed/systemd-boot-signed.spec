@@ -67,7 +67,7 @@ push rpm_contents
 
 # This spec's whole purpose is to inject the signed systemd-boot binary
 rpm2cpio %{SOURCE0} | cpio -idmv
-cp %{SOURCE1} ./lib/systemd/boot/efi/systemd-bootx64.efi
+cp %{SOURCE1} ./usr/lib/systemd/boot/efi/systemd-bootx64.efi
 
 popd
 
