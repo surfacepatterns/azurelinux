@@ -14,7 +14,7 @@
 
 Name:         kata-containers-cc
 Version:      3.2.0.azl2
-Release:      2%{?dist}
+Release:      3%{?dist}
 Summary:      Kata Confidential Containers package developed for Confidential Containers on AKS
 License:      ASL 2.0
 Vendor:       Microsoft Corporation
@@ -230,18 +230,15 @@ popd
 install -D -m 0755 %{_builddir}/%{name}-%{version}/tools/osbuilder/image-builder/image_builder.sh   %{buildroot}%{osbuilder}/tools/osbuilder/image-builder/image_builder.sh
 install -D -m 0755 %{_builddir}/%{name}-%{version}/tools/osbuilder/image-builder/nsdax.gpl.c        %{buildroot}%{osbuilder}/tools/osbuilder/image-builder/nsdax.gpl.c
 
+%post
+%systemd_post tardev-snapshotter.service
+
 %preun
 %systemd_preun tardev-snapshotter.service
 
 %postun
-%systemd_postun tardev-snapshotter.service
+%systemd_postun_with_restart tardev-snapshotter.service
 
-%post
-%systemd_post tardev-snapshotter.service
-
-echo "kata-containers SPEC enable and start service"
-systemctl enable tardev-snapshotter.service
-systemctl start tardev-snapshotter.service
 
 %files
 %{share_kata}/vmlinux.container

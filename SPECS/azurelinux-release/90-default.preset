@@ -183,6 +183,8 @@ enable cloud-final.service
 enable cloud-init.service
 enable cloud-init-local.service
 
+enable tardev-snapshotter.service
+
 enable waagent.service
 
 enable ephemeral-disk-warning.service
