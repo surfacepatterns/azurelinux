@@ -14,7 +14,7 @@
 
 Name:         kata-containers-cc
 Version:      3.2.0.azl2
-Release:      3%{?dist}
+Release:      4%{?dist}
 Summary:      Kata Confidential Containers package developed for Confidential Containers on AKS
 License:      ASL 2.0
 Vendor:       Microsoft Corporation
@@ -293,6 +293,9 @@ fi
 %exclude %{osbuilder}/tools/osbuilder/rootfs-builder/ubuntu
 
 %changelog
+* Mon Jul 08 2024 Cameron Baird <cameronbaird@microsoft.com> 3.2.0.azl2-4
+- Explicitly set OS_VERSION=3.0 for invocations of rootfs builder
+
 * Tue Jul 02 2024 Mitch Zhu <mitchzhu@microsoft.com> 3.2.0.azl2-3
 - Enable and start tardev-snapshotter.service after installation
 

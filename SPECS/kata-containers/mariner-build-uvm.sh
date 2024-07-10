@@ -13,7 +13,7 @@ rm -rf ${ROOTFS_DIR}
 pushd ${OSBUILDER_DIR}
 sudo make clean
 rm -rf ${ROOTFS_DIR}
-sudo -E PATH=$PATH make -B DISTRO=cbl-mariner rootfs
+sudo -E PATH=$PATH make -B DISTRO=cbl-mariner OS_VERSION=3.0 rootfs
 popd
 
 # copy service files
@@ -22,5 +22,5 @@ cp ${SCRIPT_DIR}/agent/usr/lib/systemd/system/kata-agent.service   ${ROOTFS_DIR}
 
 # build initrd
 pushd ${OSBUILDER_DIR}
-sudo -E PATH=$PATH make DISTRO=cbl-mariner TARGET_ROOTFS=${ROOTFS_DIR} initrd
+sudo -E PATH=$PATH make DISTRO=cbl-mariner TARGET_ROOTFS=${ROOTFS_DIR} OS_VERSION=3.0 initrd
 popd
