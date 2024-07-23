@@ -35,7 +35,7 @@ func TestCustomizeImageResolvConfDelete(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -67,7 +67,7 @@ func TestCustomizeImageResolvConfRestoreFile(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -98,7 +98,7 @@ func TestCustomizeImageResolvConfRestoreFile(t *testing.T) {
 		return
 	}
 
-	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -138,7 +138,7 @@ func TestCustomizeImageResolvConfRestoreSymlink(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -168,7 +168,7 @@ func TestCustomizeImageResolvConfRestoreSymlink(t *testing.T) {
 		return
 	}
 
-	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -206,7 +206,7 @@ func TestCustomizeImageResolvConfNewSymlink(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}

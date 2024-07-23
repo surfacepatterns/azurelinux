@@ -56,7 +56,7 @@ func TestCustomizeImagePartitions(t *testing.T) {
 		},
 	}
 
-	imageConnection, err := connectToImage(buildDir, outImageFilePath, mountPoints)
+	imageConnection, err := connectToImage(buildDir, outImageFilePath, false, mountPoints)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -123,7 +123,7 @@ func TestCustomizeImageKernelCommandLine(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}

@@ -45,7 +45,7 @@ func testCustomizeImagePackagesAddHelper(t *testing.T, testTmpDir string, baseIm
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -74,7 +74,7 @@ func TestCustomizeImagePackagesUpdate(t *testing.T) {
 		return
 	}
 
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}

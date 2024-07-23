@@ -60,7 +60,7 @@ func TestCustomizeImageCopyFiles(t *testing.T) {
 	checkFileType(t, outImageFilePath, "raw")
 
 	// Mount the output disk image so that its contents can be checked.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -72,8 +72,8 @@ func TestCustomizeImageCopyFiles(t *testing.T) {
 	assert.Equal(t, "abcdefg\n", string(file_contents))
 }
 
-func connectToCoreEfiImage(buildDir string, imageFilePath string) (*ImageConnection, error) {
-	return connectToImage(buildDir, imageFilePath, []mountPoint{
+func connectToCoreEfiImage(buildDir string, imageFilePath string, includeDefaultMounts bool) (*ImageConnection, error) {
+	return connectToImage(buildDir, imageFilePath, includeDefaultMounts, []mountPoint{
 		{
 			PartitionNum:   2,
 			Path:           "/",
@@ -94,7 +94,8 @@ type mountPoint struct {
 	Flags          uintptr
 }
 
-func connectToImage(buildDir string, imageFilePath string, mounts []mountPoint) (*ImageConnection, error) {
+func connectToImage(buildDir string, imageFilePath string, includeDefaultMounts bool, mounts []mountPoint,
+) (*ImageConnection, error) {
 	imageConnection := NewImageConnection()
 	err := imageConnection.ConnectLoopback(imageFilePath)
 	if err != nil {
@@ -119,7 +120,7 @@ func connectToImage(buildDir string, imageFilePath string, mounts []mountPoint) 
 		mountPoints = append(mountPoints, mountPoint)
 	}
 
-	err = imageConnection.ConnectChroot(rootDir, false, []string{}, mountPoints, false)
+	err = imageConnection.ConnectChroot(rootDir, false, []string{}, mountPoints, includeDefaultMounts)
 	if err != nil {
 		imageConnection.Close()
 		return nil, err
@@ -213,7 +214,7 @@ func TestCustomizeImageKernelCommandLineAdd(t *testing.T) {
 	}
 
 	// Mount the output disk image so that its contents can be checked.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}

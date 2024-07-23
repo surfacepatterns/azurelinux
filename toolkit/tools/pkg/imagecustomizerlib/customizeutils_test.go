@@ -17,6 +17,7 @@ import (
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/file"
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/ptrutils"
 	"github.com/microsoft/azurelinux/toolkit/tools/internal/safechroot"
+	"github.com/microsoft/azurelinux/toolkit/tools/internal/systemd"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -62,7 +63,7 @@ func TestCustomizeImageHostname(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -140,7 +141,7 @@ func TestCustomizeImageAdditionalFiles(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -236,7 +237,7 @@ func TestCustomizeImageAdditionalDirs(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -310,7 +311,7 @@ func TestCustomizeImageSELinux(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -339,7 +340,7 @@ func TestCustomizeImageSELinux(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -368,7 +369,7 @@ func TestCustomizeImageSELinux(t *testing.T) {
 	}
 
 	// Connect to customized image.
-	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath)
+	imageConnection, err = connectToCoreEfiImage(buildDir, outImageFilePath, false)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -414,7 +415,7 @@ func TestCustomizeImageSELinuxAndPartitions(t *testing.T) {
 		},
 	}
 
-	imageConnection, err := connectToImage(buildDir, outImageFilePath, mountPoints)
+	imageConnection, err := connectToImage(buildDir, outImageFilePath, false, mountPoints)
 	if !assert.NoError(t, err) {
 		return
 	}
@@ -443,6 +444,86 @@ func TestCustomizeImageSELinuxNoPolicy(t *testing.T) {
 	assert.ErrorContains(t, err, "SELinux is enabled but the (/etc/selinux/config) file is missing")
 	assert.ErrorContains(t, err, "please ensure an SELinux policy is installed")
 	assert.ErrorContains(t, err, "the 'selinux-policy' package provides the default policy")
+}
+
+func TestCustomizeImageServicesEnableDisable(t *testing.T) {
+	baseImage := checkSkipForCustomizeImage(t, baseImageTypeCoreEfi)
+
+	testTmpDir := filepath.Join(tmpDir, "TestCustomizeImageServicesEnableDisable")
+	buildDir := filepath.Join(testTmpDir, "build")
+	outImageFilePath := filepath.Join(testTmpDir, "image.raw")
+
+	// Customize image.
+	configFile := filepath.Join(testDir, "services-config.yaml")
+	err := CustomizeImageWithConfigFile(buildDir, configFile, baseImage, nil, outImageFilePath, "raw", "",
+		true /*useBaseImageRpmRepos*/, false /*enableShrinkFilesystems*/)
+	if !assert.NoError(t, err) {
+		return
+	}
+
+	// Connect to image.
+	imageConnection, err := connectToCoreEfiImage(buildDir, outImageFilePath, true)
+	if !assert.NoError(t, err) {
+		return
+	}
+	defer imageConnection.Close()
+
+	// Verify state of services.
+	consoleGettyEnabled, err := systemd.IsServiceEnabled("console-getty", imageConnection.Chroot())
+	assert.NoError(t, err)
+	assert.True(t, consoleGettyEnabled)
+
+	chronydEnabled, err := systemd.IsServiceEnabled("chronyd", imageConnection.Chroot())
+	assert.NoError(t, err)
+	assert.False(t, chronydEnabled)
+}
+
+func TestCustomizeImageServicesEnableUnknown(t *testing.T) {
+	baseImage := checkSkipForCustomizeImage(t, baseImageTypeCoreEfi)
+
+	testTmpDir := filepath.Join(tmpDir, "TestCustomizeImageServicesEnableUnknown")
+	buildDir := filepath.Join(testTmpDir, "build")
+	outImageFilePath := filepath.Join(testTmpDir, "image.raw")
+
+	// Customize image.
+	config := imagecustomizerapi.Config{
+		OS: &imagecustomizerapi.OS{
+			Services: imagecustomizerapi.Services{
+				Enable: []string{
+					"chocolate-chip-muffin",
+				},
+			},
+		},
+	}
+
+	err := CustomizeImage(buildDir, testDir, &config, baseImage, nil, outImageFilePath, "raw", "",
+		true /*useBaseImageRpmRepos*/, false /*enableShrinkFilesystems*/)
+	assert.ErrorContains(t, err, "failed to enable service (chocolate-chip-muffin)")
+	assert.ErrorContains(t, err, "chocolate-chip-muffin.service does not exist")
+}
+
+func TestCustomizeImageServicesDisableUnknown(t *testing.T) {
+	baseImage := checkSkipForCustomizeImage(t, baseImageTypeCoreEfi)
+
+	testTmpDir := filepath.Join(tmpDir, "TestCustomizeImageServicesDisableUnknown")
+	buildDir := filepath.Join(testTmpDir, "build")
+	outImageFilePath := filepath.Join(testTmpDir, "image.raw")
+
+	// Customize image.
+	config := imagecustomizerapi.Config{
+		OS: &imagecustomizerapi.OS{
+			Services: imagecustomizerapi.Services{
+				Disable: []string{
+					"chocolate-chip-muffin",
+				},
+			},
+		},
+	}
+
+	err := CustomizeImage(buildDir, testDir, &config, baseImage, nil, outImageFilePath, "raw", "",
+		true /*useBaseImageRpmRepos*/, false /*enableShrinkFilesystems*/)
+	assert.ErrorContains(t, err, "failed to disable service (chocolate-chip-muffin)")
+	assert.ErrorContains(t, err, "No such file or directory")
 }
 
 func verifyFileContentsSame(t *testing.T, origPath string, newPath string) {
