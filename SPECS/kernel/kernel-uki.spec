@@ -13,7 +13,8 @@
 # We need to temporarily turn it off by disabling xsaves until the problem
 # is fixed on Azure. Since shadow stack depends on xsaves, disabling xsaves
 # ensures the feature bit for shadow stack is also turned off.
-%define cmdline console=ttyS0 noxsaves
+#%define cmdline console=tty0 console=ttyS0=115200 audit=0 rd.shell=1 rd.break=pre-pivot noxsaves
+%define cmdline console=tty0 console=ttyS0=115200 audit=0 rd.shell=1 noxsaves
 
 Summary:        Unified Kernel Image
 Name:           kernel-uki
@@ -36,6 +37,7 @@ BuildRequires:  system-release
 BuildRequires:  tpm2-tools
 BuildRequires:  cryptsetup
 BuildRequires:  device-mapper
+Requires: systemd-boot-unsigned
 
 %description
 The kernel-uki package contains the Linux kernel packaged as a Unified
@@ -59,9 +61,14 @@ ukify build \
 
 %install
 install -D -t %{buildroot}/lib/modules/%{kernelver} vmlinuz-uki.efi
+install -D -t %{buildroot}/boot/efi/EFI/Linux/ vmlinuz-uki.efi
+
+%post
+bootctl install
 
 %files
 /lib/modules/%{kernelver}/vmlinuz-uki.efi
+/boot/efi/EFI/Linux/vmlinuz-uki.efi
 
 %changelog
 * Thu Apr 25 2024 Dan Streetman <ddstreet@microsoft.com> - 6.6.29.1-4

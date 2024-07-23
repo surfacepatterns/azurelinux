@@ -1,3 +1,4 @@
+#!/bin/bash
 # Setup the data partition
 mkdir /data/overlays
 mkdir -p /data/overlays/etc/upper
@@ -23,9 +24,9 @@ echo "overlay /root overlay x-initrd.mount,x-systemd.requires-mounts-for=/sysroo
 #sed -i "s/rd.shell=0 rd.emergency=reboot/rd.shell=1 rd.break=pre-pivot/" /boot/grub2/grub.cfg
 
 # Ensure overlay driver is available in initrd
-echo "add_drivers+=\" overlay \"" >> /etc/dracut.conf.d/01-coal.conf
+# echo "add_drivers+=\" overlay \"" >> /etc/dracut.conf.d/01-coal.conf
 # Enable systemd-repart in the initrd
-echo "add_dracutmodules+=\" systemd-repart \"" >> /etc/dracut.conf.d/01-coal.conf
+# echo "add_dracutmodules+=\" systemd-repart \"" >> /etc/dracut.conf.d/01-coal.conf
 
 # Regenerate initrd with locale in it
-dracut --force --regenerate-all --include /usr/lib/locale /usr/lib/locale
+# dracut --force --regenerate-all --include /usr/lib/locale /usr/lib/locale

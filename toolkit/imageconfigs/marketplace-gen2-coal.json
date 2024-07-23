@@ -2,7 +2,7 @@
     "Disks": [
         {
             "PartitionTableType": "gpt",
-            "MaxSize": 6000,
+            "MaxSize": 7000,
             "Artifacts": [
                 {
                     "Name": "azurelinux-gen2",
@@ -21,27 +21,27 @@
                         "boot"
                     ],
                     "Start": 1,
-                    "End": 65,
+                    "End": 565,
                     "FsType": "fat32"
                 },
                 {
                     "ID": "boot",
-                    "Start": 65,
-                    "End": 565,
+                    "Start": 565,
+                    "End": 1065,
                     "FsType": "ext4"
                 },
                 {
                     "ID": "rootfs",
                     "Name": "rootfs",
-                    "Start": 565,
-                    "End": 4800,
+                    "Start": 1065,
+                    "End": 5800,
                     "FsType": "ext4"
                 },
                 {
                     "ID": "data",
                     "Name": "data",
-                    "Start": 4800,
-                    "End": 5000,
+                    "Start": 5800,
+                    "End": 6000,
                     "FsType": "ext4"
                 }
             ]
@@ -70,6 +70,7 @@
                     "MountPoint": "/data"
                 }
             ],
+            "EnableGrubMkconfig": false,
             "PackageLists": [
                 "packagelists/coal-packages.json"
             ],
@@ -88,10 +89,7 @@
                 }
             ],
             "KernelOptions": {
-                "default": "kernel"
-            },
-            "KernelCommandLine": {
-                "ExtraCommandLine": "console=tty0 console=ttyS0=115200 rd.shell=1 audit=0"
+                "default": "kernel-uki"
             }
         }
     ]
