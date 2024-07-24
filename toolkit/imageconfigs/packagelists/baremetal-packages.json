@@ -1,5 +1,6 @@
 {
     "packages": [
-        "dracut-megaraid"
+        "dracut-megaraid",
+        "tpm2-tss"
     ]
 }

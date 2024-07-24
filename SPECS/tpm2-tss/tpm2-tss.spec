@@ -1,7 +1,7 @@
 Summary:        OSS implementation of the TCG TPM2 Software Stack (TSS2)
 Name:           tpm2-tss
 Version:        4.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -13,6 +13,7 @@ Source0:        https://github.com/tpm2-software/tpm2-tss/releases/download/%{ve
 # a circular dependency.  So, for CBL-Mariner, keep the manual post steps to create
 # tss group/user and do not include sysusers file.
 
+Patch0: TEST.patch
 BuildRequires:  json-c-devel
 BuildRequires:  openssl-devel
 BuildRequires:  shadow-utils
@@ -42,7 +43,9 @@ The libraries and header files needed for TSS2 development.
     --disable-static \
     --disable-doxygen-doc \
     --enable-fapi=no \
-    --with-udevrulesdir=%{_sysconfdir}/udev/rules.d
+    --with-udevrulesdir=%{_sysconfdir}/udev/rules.d \
+    CFLAGS="$CFLAGS -Wno-deprecated-declarations" \
+    CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 
 %make_build
 
